@@ -1,5 +1,0 @@
-package com.jeonju.movie.Board.dao;
-
-public interface BoardDAO {
-
-}
