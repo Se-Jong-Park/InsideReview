@@ -1,0 +1,5 @@
+package com.jeonju.movie.movie.controller;
+
+public class MainController {
+
+}

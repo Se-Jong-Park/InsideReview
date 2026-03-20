@@ -1,0 +1,27 @@
+package com.jeonju.movie.movie.dao;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.jeonju.movie.movie.vo.MovieVO;
+
+@Repository
+public class MovieDAOImpl implements MovieDAO {
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	private static final String NS = "com.jeonju.movie.movie.mapper.MovieMapper.";
+	
+	@Override
+	public List<MovieVO> getMovieList() {
+		return sqlSession.selectList(NS + "getMovieList");
+	}
+	
+	@Override
+	public MovieVO getMovieDetail(String mno) {
+		return sqlSession.selectOne(NS + "getMovieDetail", mno);
+	}
+}

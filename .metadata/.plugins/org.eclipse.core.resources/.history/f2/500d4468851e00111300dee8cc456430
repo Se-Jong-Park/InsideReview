@@ -1,0 +1,5 @@
+package com.jeonju.movie.movie;
+
+public class MovieVO {
+
+}

@@ -1,0 +1,23 @@
+package com.jeonju.movie.Board.dao;
+
+import java.util.List;
+
+import com.jeonju.movie.board.vo.BoardVO;
+
+public interface BoardDAO {
+	List<BoardVO> getBoardList(String mno);
+	
+	List<BoardVO> getRecentBoardList();
+	
+	BoardVO getBoardDetail(String bno);
+	
+	void updateBcnt(String bno);
+	
+	int getMaxNo();
+	
+	void insertBoard(BoardVO vo);
+	
+	void updateBoard(BoardVO vo);
+	
+	void deleteBoard(String bno);
+}

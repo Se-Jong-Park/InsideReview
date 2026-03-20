@@ -1,0 +1,5 @@
+package com.jeonju.movie.Rating.dao;
+
+public class RatingDAOImpl {
+
+}

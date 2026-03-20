@@ -1,0 +1,55 @@
+package com.jeonju.movie.ratingtemp.vo;
+
+public class RatingVO {
+	private String ratno;
+	private String mno;
+	private String uno;
+	private String ratscore;
+	private String ratinsertdate;
+	
+	private String mtitle;
+	private double avgScore;
+	
+	public String getRatno() {
+		return ratno;
+	}
+	public void setRatno(String ratno) {
+		this.ratno = ratno;
+	}
+	public String getMno() {
+		return mno;
+	}
+	public void setMno(String mno) {
+		this.mno = mno;
+	}
+	public String getUno() {
+		return uno;
+	}
+	public void setUno(String uno) {
+		this.uno = uno;
+	}
+	public String getRatscore() {
+		return ratscore;
+	}
+	public void setRatscore(String ratscore) {
+		this.ratscore = ratscore;
+	}
+	public String getRatinsertdate() {
+		return ratinsertdate;
+	}
+	public void setRatinsertdate(String ratinsertdate) {
+		this.ratinsertdate = ratinsertdate;
+	}
+	public String getMtitle() {
+		return mtitle;
+	}
+	public void setMtitle(String mtitle) {
+		this.mtitle = mtitle;
+	}
+	public double getAvgScore() {
+		return avgScore;
+	}
+	public void setAvgScore(double avgScore) {
+		this.avgScore = avgScore;
+	}
+}

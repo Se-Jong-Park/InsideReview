@@ -1,0 +1,17 @@
+package com.jeonju.movie.Rating.dao;
+
+import java.util.List;
+import com.jeonju.movie.Rating.vo.RatingVO;
+import com.jeonju.movie.movie.vo.MovieVO;
+
+public interface RatingDAO {
+	void insertRating(RatingVO vo);
+	
+	int getMaxNo();
+	
+	int checkRating(RatingVO vo);
+	
+	double getAvgScore(String mno);
+	
+	List<MovieVO> getRankingList();
+}

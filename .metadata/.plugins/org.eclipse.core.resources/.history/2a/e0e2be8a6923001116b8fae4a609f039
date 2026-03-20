@@ -1,0 +1,199 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${board.btitle} — CINEVERSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+    <style>
+        .detail-wrap {
+            max-width: 900px; margin: 0 auto;
+            padding: 100px 24px 60px;
+        }
+
+        /* ── 게시물 헤더 ── */
+        .detail-header {
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .detail-movie-tag {
+            display: inline-block;
+            font-size: .7rem; font-weight: 700; letter-spacing: 1.5px;
+            color: var(--accent); border: 1px solid var(--accent);
+            padding: 3px 10px; border-radius: 3px; margin-bottom: 12px;
+            text-decoration: none;
+        }
+        .detail-movie-tag:hover { background: rgba(229,9,20,.1); }
+        .detail-title {
+            font-size: 1.5rem; font-weight: 700;
+            line-height: 1.4; margin-bottom: 16px;
+        }
+        .detail-meta {
+            display: flex; gap: 20px; align-items: center;
+            font-size: .8rem; color: var(--text-muted);
+        }
+        .detail-author { color: var(--text-secondary); font-weight: 500; }
+
+        /* ── 게시물 본문 ── */
+        .detail-content {
+            min-height: 300px;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .92rem; line-height: 1.85;
+            color: var(--text-primary);
+        }
+        /* 에디터로 작성된 HTML 스타일 정상화 */
+        .detail-content img { max-width: 100%; border-radius: 8px; }
+        .detail-content p  { margin-bottom: 12px; }
+        .detail-content a  { color: var(--accent); }
+
+        /* ── 첨부파일 ── */
+        .detail-attach {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .82rem;
+        }
+        .detail-attach-label {
+            color: var(--text-muted); margin-bottom: 6px;
+            font-weight: 700; letter-spacing: .5px; font-size: .75rem;
+        }
+        .detail-attach a {
+            color: var(--accent); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .detail-attach a:hover { text-decoration: underline; }
+
+        /* ── 액션 버튼 ── */
+        .detail-actions {
+            display: flex; justify-content: space-between;
+            align-items: center; padding-top: 24px;
+        }
+        .btn-back {
+            padding: 9px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary); border-radius: 7px;
+            font-size: .82rem; cursor: pointer;
+            text-decoration: none; display: inline-block;
+            transition: all .2s;
+        }
+        .btn-back:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+        .detail-owner-btns { display: flex; gap: 8px; }
+        .btn-edit {
+            padding: 9px 20px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary); border-radius: 7px;
+            font-size: .82rem; cursor: pointer;
+            text-decoration: none; display: inline-block;
+            transition: background .2s;
+        }
+        .btn-edit:hover { background: var(--bg-card); }
+        .btn-delete {
+            padding: 9px 20px;
+            background: rgba(229,9,20,.1);
+            border: 1px solid rgba(229,9,20,.3);
+            color: var(--accent); border-radius: 7px;
+            font-size: .82rem; cursor: pointer;
+            transition: background .2s;
+        }
+        .btn-delete:hover { background: rgba(229,9,20,.2); }
+    </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <a href="${pageContext.request.contextPath}/" class="nav-logo">CINEVERSE</a>
+    <div class="nav-links">
+        <a href="${pageContext.request.contextPath}/">홈</a>
+        <a href="${pageContext.request.contextPath}/movie/list" class="active">커뮤니티</a>
+    </div>
+    <div class="nav-right">
+        <c:choose>
+            <c:when test="${not empty sessionScope.loginUser}">
+                <span style="font-size:.82rem; color:var(--text-secondary);">${sessionScope.loginUser.nickname}</span>
+                <a href="${pageContext.request.contextPath}/member/logout" class="btn-logout">로그아웃</a>
+            </c:when>
+            <c:otherwise>
+                <a href="${pageContext.request.contextPath}/member/login" class="btn-login">로그인</a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</nav>
+
+<div class="detail-wrap">
+
+    <!-- 게시물 헤더 -->
+    <div class="detail-header">
+        <a href="${pageContext.request.contextPath}/board/list?mno=${board.mno}"
+           class="detail-movie-tag">${board.mtitle} 게시판</a>
+        <div class="detail-title">${board.btitle}</div>
+        <div class="detail-meta">
+            <span class="detail-author">${board.bid}</span>
+            <span>${board.binsertdate}</span>
+            <span>조회 ${board.bcnt}</span>
+        </div>
+    </div>
+
+    <!-- 게시물 본문 (에디터 HTML 그대로 출력) -->
+    <div class="detail-content">
+        ${board.bcontent}
+    </div>
+
+    <!-- 첨부파일 -->
+    <c:if test="${not empty board.bupload}">
+        <div class="detail-attach">
+            <div class="detail-attach-label">📎 첨부파일</div>
+            <a href="${pageContext.request.contextPath}/resources/upload/${board.bupload}"
+               download="${board.borfile}">${board.borfile}</a>
+        </div>
+    </c:if>
+
+    <!-- 액션 버튼 -->
+    <div class="detail-actions">
+        <a href="${pageContext.request.contextPath}/board/list?mno=${board.mno}"
+           class="btn-back">← 목록으로</a>
+
+        <%-- 작성자 본인만 수정/삭제 버튼 표시
+             팀원 세션 키 확인 후 loginUser.uid → 실제 키로 수정 --%>
+        <c:if test="${not empty sessionScope.loginUser && sessionScope.loginUser.uid == board.bid}">
+            <div class="detail-owner-btns">
+                <a href="${pageContext.request.contextPath}/board/edit?bno=${board.bno}"
+                   class="btn-edit">수정</a>
+                <button class="btn-delete" onclick="confirmDelete()">삭제</button>
+            </div>
+        </c:if>
+
+        <%-- 테스트용: 로그인 없이도 버튼 표시 (로그인 연동 후 위 c:if 방식으로 교체) --%>
+        <%--
+        <div class="detail-owner-btns">
+            <a href="${pageContext.request.contextPath}/board/edit?bno=${board.bno}" class="btn-edit">수정</a>
+            <button class="btn-delete" onclick="confirmDelete()">삭제</button>
+        </div>
+        --%>
+    </div>
+
+    <!-- 삭제 폼 (hidden) -->
+    <form id="deleteForm" action="${pageContext.request.contextPath}/board/delete"
+          method="post" style="display:none;">
+        <input type="hidden" name="bno" value="${board.bno}">
+        <input type="hidden" name="mno" value="${board.mno}">
+    </form>
+
+</div>
+
+<script>
+    function confirmDelete() {
+        if (confirm('정말 삭제하시겠어요?')) {
+            document.getElementById('deleteForm').submit();
+        }
+    }
+</script>
+</body>
+</html>

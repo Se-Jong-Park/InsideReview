@@ -1,0 +1,214 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEVERSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+    <a href="${pageContext.request.contextPath}/" class="nav-logo">CINEVERSE</a>
+    <div class="nav-links">
+        <a href="${pageContext.request.contextPath}/" class="active">홈</a>
+        <a href="${pageContext.request.contextPath}/movie/list">커뮤니티</a>
+    </div>
+    <div class="nav-right">
+        <button class="nav-search-btn" onclick="doSearch()">&#9906;</button>
+        <c:choose>
+            <c:when test="${not empty sessionScope.loginUser}">
+                <span style="font-size:.82rem; color:var(--text-secondary);">${sessionScope.loginUser.nickname}</span>
+                <a href="${pageContext.request.contextPath}/member/logout" class="btn-logout">로그아웃</a>
+            </c:when>
+            <c:otherwise>
+                <a href="${pageContext.request.contextPath}/member/login" class="btn-login">로그인</a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</nav>
+
+<!-- ── HERO SLIDER (영화 목록 앞 3개를 슬라이드로) ── -->
+<section class="hero" id="heroSection">
+    <div class="hero-slides" id="heroSlides">
+        <c:forEach var="movie" items="${movieList}" end="2" varStatus="st">
+        <div class="hero-slide"
+             <c:if test="${not empty movie.mposter}">
+             style="background-image: url('${pageContext.request.contextPath}/resources/upload/${movie.mposter}'); background-size:cover; background-position:center;"
+             </c:if>>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <c:choose>
+                        <c:when test="${st.index == 0}">NOW SHOWING</c:when>
+                        <c:when test="${st.index == 1}">HOT</c:when>
+                        <c:otherwise>TOP RATED</c:otherwise>
+                    </c:choose>
+                </span>
+                <div class="hero-title">${movie.mtitle}</div>
+                <div class="hero-meta">
+                    <c:if test="${movie.avgScore > 0}">
+                        <span class="hero-rating">
+                            ★ <fmt:formatNumber value="${movie.avgScore}" pattern="0.0"/>
+                        </span>
+                    </c:if>
+                    <c:if test="${not empty movie.mreleasedate}">
+                        <span>${movie.mreleasedate}</span>
+                    </c:if>
+                    <c:if test="${not empty movie.mgenre}">
+                        <span>${movie.mgenre}</span>
+                    </c:if>
+                </div>
+                <p class="hero-desc">${movie.mcontent}</p>
+                <div class="hero-actions">
+                    <a href="${pageContext.request.contextPath}/board/list?mno=${movie.mno}" class="btn-primary">게시판 보기</a>
+                    <a href="${pageContext.request.contextPath}/movie/detail?mno=${movie.mno}" class="btn-secondary">상세 정보</a>
+                </div>
+            </div>
+        </div>
+        </c:forEach>
+    </div>
+
+    <button class="hero-arrow left"  onclick="moveSlide(-1)">&#8592;</button>
+    <button class="hero-arrow right" onclick="moveSlide(1)">&#8594;</button>
+
+    <div class="hero-dots" id="heroDots">
+        <c:forEach begin="0" end="2" var="i">
+            <div class="dot ${i == 0 ? 'active' : ''}" onclick="goSlide(${i})"></div>
+        </c:forEach>
+    </div>
+</section>
+
+<!-- ── 검색창 ── -->
+<div class="search-wrap">
+    <div class="search-box">
+        <span class="search-icon">&#9906;</span>
+        <input type="text" id="searchInput" placeholder="영화 제목, 감독, 배우 검색...">
+        <button class="search-btn" onclick="doSearch()">검색</button>
+    </div>
+</div>
+
+<!-- ── 영화 목록 그리드 ── -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-title">지금 <span>인기</span> 영화</div>
+        <a href="${pageContext.request.contextPath}/movie/list" class="section-more">전체 보기 →</a>
+    </div>
+    <div class="movies-grid">
+        <c:choose>
+            <c:when test="${not empty movieList}">
+                <c:forEach var="movie" items="${movieList}">
+                    <a href="${pageContext.request.contextPath}/board/list?mno=${movie.mno}" class="movie-card">
+                        <div class="movie-poster">
+                            <c:choose>
+                                <c:when test="${not empty movie.mposter}">
+                                    <img src="${pageContext.request.contextPath}/resources/upload/${movie.mposter}"
+                                         alt="${movie.mtitle}" loading="lazy">
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="poster-placeholder poster-ph-1">${movie.mtitle}</div>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="movie-overlay">
+                                <button class="overlay-btn">게시판 보기</button>
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <div class="movie-title">${movie.mtitle}</div>
+                            <div class="movie-meta-row">
+                                <span class="movie-year">${movie.mreleasedate}</span>
+                                <c:if test="${movie.avgScore > 0}">
+                                    <span class="movie-stars">
+                                        ★ <fmt:formatNumber value="${movie.avgScore}" pattern="0.0"/>
+                                    </span>
+                                </c:if>
+                            </div>
+                        </div>
+                    </a>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <p style="color:var(--text-muted); padding: 40px 0;">등록된 영화가 없습니다.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</section>
+
+<!-- ── 별점 TOP 10 ── -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-title">별점 <span>TOP 10</span></div>
+    </div>
+    <div class="rank-scroll">
+        <c:choose>
+            <c:when test="${not empty rankingList}">
+                <c:forEach var="movie" items="${rankingList}" varStatus="st">
+                    <a href="${pageContext.request.contextPath}/board/list?mno=${movie.mno}" class="rank-card">
+                        <span class="rank-num">${st.index + 1}</span>
+                        <div class="rank-poster">
+                            <c:choose>
+                                <c:when test="${not empty movie.mposter}">
+                                    <img src="${pageContext.request.contextPath}/resources/upload/${movie.mposter}"
+                                         alt="${movie.mtitle}">
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="poster-placeholder poster-ph-${(st.index % 6) + 1}"
+                                         style="border-radius:8px;">${movie.mtitle}</div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="rank-title">${movie.mtitle}</div>
+                    </a>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <p style="color:var(--text-muted); padding: 20px 0;">아직 별점 데이터가 없습니다.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</section>
+
+<!-- ── 최신 게시물 ── -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-title">최신 <span>게시물</span></div>
+        <a href="${pageContext.request.contextPath}/board/list" class="section-more">게시판 →</a>
+    </div>
+    <div class="posts-list">
+        <c:choose>
+            <c:when test="${not empty recentPostList}">
+                <c:forEach var="post" items="${recentPostList}">
+                    <a href="${pageContext.request.contextPath}/board/detail?bno=${post.bno}" class="post-item">
+                        <div>
+                            <span class="post-movie-tag">${post.mtitle}</span>
+                            <div class="post-title">${post.btitle}</div>
+                        </div>
+                        <div class="post-right">
+                            <div class="post-author">${post.bid}</div>
+                            <div class="post-date">${post.binsertdate}</div>
+                        </div>
+                    </a>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <p style="color:var(--text-muted); padding: 20px 16px;">아직 게시물이 없습니다.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-logo">CINEVERSE</div>
+    <div class="footer-copy">© 2025 CINEVERSE. All rights reserved.</div>
+</footer>
+
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+</body>
+</html>

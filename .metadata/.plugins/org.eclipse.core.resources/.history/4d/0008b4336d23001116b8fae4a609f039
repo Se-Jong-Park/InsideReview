@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeonju.movie.board.mapper.BoardMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="boardResultMap" type="com.jeonju.movie.board.vo.BoardVO">
+        <id     property="bno"         column="BNO"/>
+        <result property="bid"         column="BID"/>
+        <result property="bpw"         column="BPW"/>
+        <result property="btitle"      column="BTITLE"/>
+        <result property="bcontent"    column="BCONTENT"/>
+        <result property="bupload"     column="BUPLOAD"/>
+        <result property="borfile"     column="BORFILE"/>
+        <result property="bnotice"     column="BNOTICE"/>
+        <result property="bcnt"        column="BCNT"/>
+        <result property="binsertdate" column="BINSERTDATE"/>
+        <result property="bupdatedate" column="BUPDATEDATE"/>
+        <result property="bdeleteyn"   column="BDELETEYN"/>
+        <result property="mno"         column="MNO"/>
+        <result property="mtitle"      column="MTITLE"/>
+    </resultMap>
+
+    <!-- 특정 영화 게시물 목록 -->
+    <select id="getBoardList" parameterType="String" resultMap="boardResultMap">
+        SELECT B.BNO, B.BID, B.BTITLE, B.BCNT, B.BINSERTDATE,
+               B.BDELETEYN, B.MNO, M.MTITLE
+        FROM   BOARD B
+        LEFT JOIN MOVIE M ON B.MNO = M.MNO
+        WHERE  B.BDELETEYN = 'N'
+          AND  B.MNO = #{mno}
+        ORDER BY B.BINSERTDATE DESC, B.BNO DESC
+    </select>
+
+    <!-- 최신 게시물 5개 (메인화면용) -->
+    <select id="getRecentBoardList" resultMap="boardResultMap">
+        SELECT B.BNO, B.BID, B.BTITLE, B.BINSERTDATE,
+               B.MNO, M.MTITLE
+        FROM   BOARD B
+        LEFT JOIN MOVIE M ON B.MNO = M.MNO
+        WHERE  B.BDELETEYN = 'N'
+        ORDER BY B.BINSERTDATE DESC
+        LIMIT 5
+    </select>
+
+    <!-- 게시물 단건 조회 -->
+    <select id="getBoardDetail" parameterType="String" resultMap="boardResultMap">
+        SELECT B.BNO, B.BID, B.BTITLE, B.BCONTENT, B.BUPLOAD, B.BORFILE,
+               B.BNOTICE, B.BCNT, B.BINSERTDATE, B.BUPDATEDATE,
+               B.BDELETEYN, B.MNO, M.MTITLE
+        FROM   BOARD B
+        LEFT JOIN MOVIE M ON B.MNO = M.MNO
+        WHERE  B.BNO = #{bno}
+          AND  B.BDELETEYN = 'N'
+    </select>
+
+    <!-- 조회수 +1 -->
+    <update id="updateBcnt" parameterType="String">
+        UPDATE BOARD
+        SET    BCNT = BCNT + 1
+        WHERE  BNO = #{bno}
+    </update>
+
+    <!-- maxno 조회 (채번용) -->
+    <select id="getMaxNo" resultType="int">
+        SELECT IFNULL(MAX(CAST(SUBSTRING(BNO, 10) AS UNSIGNED)), 0) + 1
+        FROM   BOARD
+        WHERE  SUBSTRING(BNO, 2, 8) = DATE_FORMAT(NOW(), '%Y%m%d')
+    </select>
+
+    <!-- 게시물 등록 -->
+    <insert id="insertBoard" parameterType="com.jeonju.movie.board.vo.BoardVO">
+        INSERT INTO BOARD (
+            BNO, BID, BPW, BTITLE, BCONTENT, BUPLOAD, BORFILE,
+            BNOTICE, BCNT, BINSERTDATE, BUPDATEDATE, BDELETEYN, MNO
+        ) VALUES (
+            #{bno}, #{bid}, #{bpw}, #{btitle}, #{bcontent}, #{bupload}, #{borfile},
+            #{bnotice}, 0, NOW(), NOW(), 'N', #{mno}
+        )
+    </insert>
+
+    <!-- 게시물 수정 -->
+    <update id="updateBoard" parameterType="com.jeonju.movie.board.vo.BoardVO">
+        UPDATE BOARD
+        SET    BTITLE      = #{btitle},
+               BCONTENT    = #{bcontent},
+               BUPLOAD     = #{bupload},
+               BORFILE     = #{borfile},
+               BUPDATEDATE = NOW()
+        WHERE  BNO = #{bno}
+    </update>
+
+    <!-- 논리 삭제 -->
+    <update id="deleteBoard" parameterType="String">
+        UPDATE BOARD
+        SET    BDELETEYN   = 'Y',
+               BUPDATEDATE = NOW()
+        WHERE  BNO = #{bno}
+    </update>
+
+</mapper>

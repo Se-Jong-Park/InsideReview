@@ -1,0 +1,17 @@
+package com.jeonju.movie.Board.vo;
+
+public class BoardVO {
+	private String bno;
+	private String bid;
+	private String bpw;
+	private String btitle;
+	private String bcontent;
+	private String bupload;
+	private int bnotice;
+	private int bcnt;
+	private String binsertdate;
+	private String bupdatedate;
+	private String bdeleteyn;
+	private String mno;
+	
+}

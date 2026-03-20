@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jeonju.movie.movie.mapper.MovieMapper">
+
+    <!-- 메인화면 영화 목록 -->
+    <select id="getMovieList" resultType="com.jeonju.movie.movie.vo.MovieVO">
+        SELECT M.MNO, M.MTITLE, M.MPOSTER, M.MGENRE, M.MRELEASEDATE,
+               IFNULL(AVG(CAST(R.RATSCORE AS DECIMAL)), 0) AS avgScore
+        FROM   MOVIE M
+        LEFT JOIN RATING R ON M.MNO = R.MNO
+        WHERE  M.MDELETEYN IS NULL
+        GROUP BY M.MNO, M.MTITLE, M.MPOSTER, M.MGENRE, M.MRELEASEDATE
+        ORDER BY M.MINSERTDATE DESC
+    </select>
+
+    <!-- 영화 단건 조회 -->
+    <select id="getMovieDetail" parameterType="String" resultType="com.jeonju.movie.movie.vo.MovieVO">
+        SELECT MNO, MTITLE, MCONTENT, MGENRE, MDIRECTER, MACTOR,
+               MRELEASEDATE, MPOSTER, MINSERTDATE
+        FROM   MOVIE
+        WHERE  MNO = #{mno}
+          AND  MDELETEYN IS NULL
+    </select>
+
+</mapper>

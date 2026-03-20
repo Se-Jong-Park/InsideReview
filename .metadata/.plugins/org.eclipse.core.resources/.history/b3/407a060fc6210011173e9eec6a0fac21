@@ -1,0 +1,118 @@
+package com.jeonju.movie.boardtemp.controller;
+
+import java.util.List;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.jeonju.movie.movie.dao.MovieDAO;
+import com.jeonju.movie.movie.vo.MovieVO;
+import com.jeonju.movie.Rating.service.RatingService;
+import com.jeonju.movie.Rating.vo.RatingVO;
+import com.jeonju.movie.board.service.BoardService;
+import com.jeonju.movie.board.vo.BoardVO;
+import com.jeonju.movie.user.vo.UserVO;
+
+@Controller
+@RequestMapping("/board")
+public class BoardController {
+
+    @Autowired private BoardService  boardService;
+    @Autowired private MovieDAO      movieDAO;
+    @Autowired private RatingService ratingService;
+
+    // ── 게시판 목록 ──────────────────────────────────────────
+    @GetMapping("/list")
+    public String boardList(@RequestParam String mno,
+                            HttpSession session,
+                            Model model) {
+
+        // 영화 정보
+        MovieVO movie = movieDAO.getMovieDetail(mno);
+        model.addAttribute("movie", movie);
+
+        // 게시물 목록
+        List<BoardVO> boardList = boardService.getBoardList(mno);
+        model.addAttribute("boardList", boardList);
+
+        // 평균 별점
+        double avgScore = ratingService.getAvgScore(mno);
+        model.addAttribute("avgScore", avgScore);
+
+        // 별점 팝업 노출 여부 (세션에 기록이 없으면 팝업 띄움)
+        boolean showRatingPopup = (session.getAttribute("rated_" + mno) == null);
+        model.addAttribute("showRatingPopup", showRatingPopup);
+        model.addAttribute("mno", mno);
+
+        return "boardList";   // WEB-INF/views/boardList.jsp
+    }
+
+    // ── 게시물 상세 ──────────────────────────────────────────
+    @GetMapping("/detail")
+    public String boardDetail(@RequestParam String bno, Model model) {
+        BoardVO board = boardService.getBoardDetail(bno);
+        model.addAttribute("board", board);
+        return "boardDetail";
+    }
+
+    // ── 게시물 작성 폼 ────────────────────────────────────────
+    @GetMapping("/write")
+    public String boardWriteForm(@RequestParam String mno, Model model) {
+        model.addAttribute("mno", mno);
+        return "boardWrite";
+    }
+
+    // ── 게시물 작성 처리 ──────────────────────────────────────
+    @PostMapping("/write")
+    public String boardWriteProc(BoardVO vo, HttpSession session) {
+        // 로그인 유저 아이디 세션에서 주입
+        // 팀원 세션 키 확인 후 아래 주석 해제
+        // UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+        // vo.setBid(loginUser.getUid());
+
+        boardService.insertBoard(vo);
+        return "redirect:/board/list?mno=" + vo.getMno();
+    }
+
+    // ── 게시물 수정 폼 ────────────────────────────────────────
+    @GetMapping("/edit")
+    public String boardEditForm(@RequestParam String bno, Model model) {
+        // 수정 폼은 조회수 증가 없이 단건 조회
+        BoardVO board = boardService.getBoardDetail(bno);
+        model.addAttribute("board", board);
+        return "boardEdit";
+    }
+
+    // ── 게시물 수정 처리 ──────────────────────────────────────
+    @PostMapping("/edit")
+    public String boardEditProc(BoardVO vo) {
+        boardService.updateBoard(vo);
+        return "redirect:/board/detail?bno=" + vo.getBno();
+    }
+
+    // ── 게시물 삭제 ──────────────────────────────────────────
+    @PostMapping("/delete")
+    public String boardDelete(@RequestParam String bno,
+                              @RequestParam String mno) {
+        boardService.deleteBoard(bno);
+        return "redirect:/board/list?mno=" + mno;
+    }
+
+    // ── 별점 등록 (팝업에서 POST) ─────────────────────────────
+    @PostMapping("/rating")
+    public String ratingProc(RatingVO vo, HttpSession session) {
+        // 로그인 유저 UNO 세션에서 주입
+        // 팀원 세션 키 확인 후 아래 주석 해제
+        // UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+        // vo.setUno(loginUser.getUno());
+
+        ratingService.insertRating(vo);
+
+        // 세션에 기록 → 같은 영화 재방문 시 팝업 안 뜸
+        session.setAttribute("rated_" + vo.getMno(), "Y");
+
+        return "redirect:/board/list?mno=" + vo.getMno();
+    }
+}

@@ -1,0 +1,29 @@
+1773711462058	Rename package 'com.jeonju.movie.BoardVO'
+1773711509306	Rename package 'com.jeonju.movie.Board.dao'
+1773711533468	Delete element
+1773711561226	Rename package 'com.jeonju.movie.Board.vo.vo'
+1773712334286	Delete element
+1773712360448	Delete element
+1773712753920	Delete element
+1773712757335	Delete element
+1773713681993	Rename package 'com.jeonju.movie.Board.vo'
+1773713694561	Rename package 'com.jeonju.movie.Board.vo.dao'
+1773713700272	Move compilation unit
+1773713713025	Delete element
+1773713753171	Delete element
+1773714696128	Rename package 'com.jeonju.movie.Rating.vo'
+1773714713636	Move compilation unit
+1773714717164	Delete element
+1773724768716	Delete element
+1773725193183	Rename package 'com.jeonju.movie.Rating.RatingService'
+1773725239988	Delete element
+1773725360200	Delete element
+1773725395088	Delete element
+1773725460458	Delete element
+1773725900272	Delete element
+1773726319039	Delete element
+1773726322035	Delete element
+1773726981902	Rename package 'com.jeonju.movie.Board'
+1773726996516	Rename package 'com.jeonju.movie.boardtemp'
+1773727046996	Rename package 'com.jeonju.movie.Rating'
+1773727053939	Rename package 'com.jeonju.movie.ratingtemp'

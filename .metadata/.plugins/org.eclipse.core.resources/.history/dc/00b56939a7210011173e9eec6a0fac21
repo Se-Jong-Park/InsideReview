@@ -1,0 +1,5 @@
+package com.jeonju.movie.Board.dao;
+
+public class BoardDAO {
+	
+}

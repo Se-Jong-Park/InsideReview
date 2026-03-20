@@ -1,0 +1,5 @@
+package com.jeonju.movie.Rating.service;
+
+public class RatingServiceImpl {
+
+}
