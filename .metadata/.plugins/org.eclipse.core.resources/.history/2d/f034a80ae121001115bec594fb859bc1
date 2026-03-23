@@ -1,0 +1,153 @@
+package com.jeonju.movie.user.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jeonju.movie.comm.SearchCondition;
+import com.jeonju.movie.user.vo.UserVO;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	@Autowired
+	private UserDAO udao;
+
+	@Override
+	public int userJoin(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userJoin() 함수진입 >>> ");
+		int res = udao.userJoin(uvo);
+		System.out.println("res >>>> " + res);
+		return res;
+	}
+
+	@Override
+	public int userMaxno() {
+		// TODO Auto-generated method stub
+		System.out.println("Userservice userMaxno() 함수진입 >>>");
+		int maxno = udao.userMaxno();
+		System.out.println("maxno >>> " + maxno);
+		return maxno;
+	}
+
+	@Override
+	public int IdCheck(String uid) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService Idcheck() 함수진입 >>>>> ");
+		System.out.println("uid >>> " + uid);
+		int idch = udao.IdCheck(uid);
+		System.out.println("idch>>> " + idch);
+		return idch;
+	}
+
+	@Override
+	public UserVO selectID(String uid) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService selectID() 함수진입 >>> ");
+		System.out.println("uid >>> " + uid);
+		UserVO uvo = udao.selectID(uid);
+		System.out.println("uvo >>> " + uvo);
+		return uvo;
+	}
+
+	@Override
+	public int userUpdate(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userUpdate() 함수 진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		int res = udao.userUpdate(uvo);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public int userDelete(String uno) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userDelete 함수진입 >>> ");
+		System.out.println("uno >>> " + uno);
+		int res = udao.userDelete(uno);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public List<UserVO> userList(SearchCondition sc) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userList() 함수진입 >>> ");
+		System.out.println("sc >>>> " + sc);
+		List<UserVO> uList = udao.userList(sc);
+		System.out.println("uList >>> " + uList);
+		return uList;
+	}
+
+	@Override
+	public int userCnt(SearchCondition sc) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userCnt() 함수진입 >>> ");
+		System.out.println("sc >>> " + sc);
+		int totalCnt = udao.userCnt(sc);
+		System.out.println("totalCnt >>> " + totalCnt);
+		return totalCnt;
+	}
+
+	@Override
+	public UserVO userOne(String uno) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService userOne() >>>> 함수진입");
+		System.out.println("uno >>> " + uno);
+		UserVO uvo = udao.userOne(uno);
+		System.out.println("uvo >>> " + uvo);
+		return uvo;
+	}
+
+	@Override
+	public String searchID(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService searchID() 함수진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		String uid = udao.searchID(uvo);
+		System.out.println("uid >>> " + uid);
+		return uid;
+	}
+
+	@Override
+	public String searchPW(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService searchPW() 함수진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		String uid = udao.searchPW(uvo);
+		System.out.println("uid >>> " + uid);
+		return uid;
+	}
+
+	@Override
+	public int countByUmail(String umail) {
+		// TODO Auto-generated method stub
+		System.out.println("UserService countByUmail() 함수진입 >>> ");
+		System.out.println("umail >>> " + umail );
+		int res = udao.countByUmail(umail);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public UserVO selectUserByUmail(String umail) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateUpw(UserVO uvo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateUprofile(UserVO uvo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

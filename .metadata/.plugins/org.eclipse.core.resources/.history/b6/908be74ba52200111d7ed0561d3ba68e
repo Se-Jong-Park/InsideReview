@@ -1,0 +1,50 @@
+package com.jeonju.movie.user.controller;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jeonju.movie.comm.EncryptUtils;
+import com.jeonju.movie.user.service.UserService;
+import com.jeonju.movie.user.vo.UserVO;
+
+// クラス宣言(클래스선언)
+@Controller
+@RequestMapping(value="/user")
+public class UserController {
+	
+	@Autowired
+	private UserService uservice;
+	
+	// 업로드 경로
+	private String uploadPath = "C:/upload/profile";
+	
+	//회원가입 폼
+	@PostMapping(value = "/join")
+	public String userJoin(@ModelAttribute UserVO uvo, RedirectAttributes rattrs) {
+		System.out.println("UserController userJoin() 함수진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		
+		//회원번호 채번
+		int maxno = uservice.userMaxno();
+		String uno = String.format("U%001d", maxno + 1);
+		uvo.setUno(uno);
+		
+		//비밀번호 암호화
+		uvo.setUpw(EncryptUtils.encryptMD5(uvo.getUpw()));
+		
+		//기본값 세팅
+		uvo.setUrole("U");
+		uvo.setUdeleteyn('N');
+		uvo.setUtempyn("N");
+		
+		return "";
+		
+		
+	}
+}

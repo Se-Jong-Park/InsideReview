@@ -1,0 +1,338 @@
+package com.jeonju.movie.user.controller;
+
+import java.io.File;
+import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jeonju.movie.comm.EncryptUtils;
+import com.jeonju.movie.user.service.UserService;
+import com.jeonju.movie.user.vo.UserVO;
+
+// クラス宣言(클래스선언)
+@Controller
+@RequestMapping(value="/user")
+public class UserController {
+	
+	@Autowired
+	private UserService uservice;
+	
+	// 업로드 경로
+	private String uploadPath = "C:/upload/profile";
+	
+	//회원가입 폼
+	@RequestMapping(value = "/form")
+	public String userForm() {
+		System.out.println("UserController userForm() 함수진입 >>> ");
+		return "user/form";
+	}
+	
+	//회원가입 처리
+	@PostMapping(value = "/join")
+	public String userjoin(@ModelAttribute UserVO uvo, RedirectAttributes rattrs) {
+		System.out.println("Usercontroller userJoin() 함수진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		
+		//회원번호 채번
+		int maxno = uservice.userMaxno();
+		String uno = String.format("U%011d", maxno + 1);
+		uvo.setUno(uno);
+				
+		//비밀번호 암호화
+		uvo.setUpw(EncryptUtils.encryptMD5(uvo.getUpw()));
+				
+		//기본값 세팅
+		uvo.setUrole("U");
+		uvo.setUdeleteyn('N');
+		uvo.setUtempyn("N");
+		
+		if(uvo.getUprofile() == null || uvo.getUprofile().isEmpty()) {
+			uvo.setUprofile("default.png");
+		}
+		
+		int res = uservice.userJoin(uvo);
+		System.out.println("res >>> " + res);
+		
+		if(res > 0){
+			rattrs.addFlashAttribute("msg","회원가입이 완료되었습니다. 로그인해주세요.");
+			return "redirect:/user/logForm";
+		}
+		rattrs.addFlashAttribute("msg","회원가입에 실패했습니다. 다시 시도해주세요.");
+		return "redirect:/user/form";
+	}
+	
+	//아이디 중복확인
+	@RequestMapping(value = "/IdCheck")
+	@ResponseBody
+	public String IdCheck(@RequestParam String uid) {
+		System.out.println("UserController IdCheck() 함수진입 >>> ");
+		System.out.println("uid >>> " + uid);
+		int res = uservice.IdCheck(uid);
+		System.out.println("res >>> " +res);
+		return res == 0 ? "available" : "duplicated";
+	}
+	
+	//이메일 중복확인
+	@RequestMapping(value = "/mailCheck")
+	@ResponseBody
+	public String mailCheck(@RequestParam String umail) {
+		System.out.println("UserController mailCheck() 함수진입");
+		System.out.println("umail >>> " + umail);
+		int res = uservice.countByUmail(umail);
+		System.out.println("res >>> " + res);
+		return res == 0 ? "available" : "duplicated";
+	}
+	
+	//로그인 폼
+	@RequestMapping(value = "/logForm")
+	public String logForm() {
+		System.out.println("UserController logForm() 함수진입 >>> ");
+		return "user/logForm";
+	}
+	
+	//로그인 처리
+	@PostMapping(value = "/login")
+	public String login(@RequestParam String uid,
+						@RequestParam String upw,
+						HttpSession session,
+						RedirectAttributes rattrs) {
+		System.out.println("UserController login() 함수진입 >>> ");
+		System.out.println("uid >>> " + uid);
+		
+		UserVO uvo = uservice.selectID(uid);
+		System.out.println("uvo >>> " + uvo);
+		
+		//존재하지 않거나 탈퇴한 회원
+		if(uvo == null || uvo.getUdeleteyn() == 'Y') {
+			rattrs.addFlashAttribute("msg" , "아이디 또는 비밀번호가 틀렸습니다.");
+			return "redirect:/user/logForm";
+		}
+		//비밀번호 암호화 후 검증
+		if(!EncryptUtils.encryptMD5(upw).equals(uvo.getUpw())) {
+			rattrs.addFlashAttribute("msg" , "아이디 또는 비밀번호가 틀렸습니다");
+			return "redirect:/user/logForm";
+		}
+		//세션저장
+		session.setAttribute("loginUser", uvo);
+		System.out.println("로그인 성공 >>> " + uvo.getUid());
+		
+		//임시버번 상태면 비번 변경페이지로 강제 이동
+		if("Y".equals(uvo.getutempyn())) {
+			rattrs.addFlashAttribute("msg","임시 비밀번호로 로그인하셨습니다. 비밀번호를 변경해주세요");
+			return "redirect:/user/changePwForm";
+		}
+		return "redirect:/";
+	}
+	
+	//로그아웃
+	@RequestMapping(value = "/logout")
+	public String logout(HttpSession session) {
+		System.out.println("UserController logout() 함수진입 >>> ");
+		session.invalidate();
+		return "redirect:/";
+	}
+	
+	//마이페이지
+	@RequestMapping(value = "/mypage")
+	public String mypage(HttpSession session, Model model) {
+		System.out.println("UserController mypage() 함수진입 >>> ");
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		UserVO uvo = uservice.userOne(loginUser.getUno());
+		System.out.println("uvo >>> " + uvo);
+		model.addAttribute("userInfo", uvo);
+		return "user/mypage";
+	}
+	
+	//회원정보 수정 폼
+	@RequestMapping(value = "/modifyForm")
+	public String modifyForm(HttpSession session, Model model) {
+		System.out.println("UserController modfyForm() 함수진입 >>> ");
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		UserVO uvo = uservice.userOne(loginUser.getUno());
+		System.out.println("uvo >>> " + uvo);
+		model.addAttribute("userInfo", uvo);
+		return "redirect:/modifyForm";
+	}
+	
+	//회원정보 수정 처리
+	@PostMapping(value = "/modify")
+	public String modify(@ModelAttribute UserVO uvo,
+						HttpSession session,
+						RedirectAttributes rattrs) {
+		System.out.println("UserController modify()함수진입 >>> ");
+		System.out.println("uvo >>> " + uvo);
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		uvo.setUno(loginUser.getUno());
+		int res = uservice.userUpdate(uvo);
+		System.out.println("res >>> " + res);
+		
+		//세션 갱신
+		session.setAttribute("loginUser" , uservice.userOne(loginUser.getUno()));
+		rattrs.addFlashAttribute("msg", "회원정보가 수정되었습니다.");
+		return "redirect:/user/mypage";
+	}
+	//프로필 이미지 업로드
+	@PostMapping(value ="/uploadProfile")
+	public String uploadProfile(@RequestParam("profileFile") MultipartFile file,
+								HttpSession session,
+								RedirectAttributes rattrs) {
+		System.out.println("UserConrtoller uploadProfile() 함수진입 >>> ");
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		if(file != null && !file.isEmpty()) {
+			try {
+				File dir = new File(uploadPath);
+				if (!dir.exists()) dir.mkdir();
+				
+				String original = file.getOriginalFilename();
+				String ext = original.substring(original.lastIndexOf("."));
+				String saveName = UUID.randomUUID().toString().replace("-", "").substring(0,12) + ext;
+				System.out.println("savedName >>> " + saveName);
+				
+				file.transferTo(new File(uploadPath + File.separator + saveName));
+				UserVO uvo = new UserVO();
+				uvo.setUno(loginUser.getUno());
+				uvo.setUprofile(saveName);
+				
+				int res = uservice.updateUprofile(uvo);
+				System.out.println("res >>> " + res);
+				
+				//세션갱신
+				session.setAttribute("loginUser", uservice.userOne(loginUser.getUno()));
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "redirect:/user/mypage";
+	}
+	
+	//임시 비밀번호 발급 폼
+	@RequestMapping(value ="/tempPwForm")
+	public String tempPwForm() {
+		System.out.println("UserController tempPwForm() 함수진입 >>> ");
+		return "redirect:/tempPwForm";
+	}
+	
+	//임시 비밀번호 발급 처리
+	@PostMapping(value = "/tempPw")
+	public String tempPw(@RequestParam String umail, RedirectAttributes rattrs) {
+		System.out.println("UserController tempPw() 함수진입 >>> ");
+		System.out.println("umail >>> " + umail);
+		
+		UserVO uvo = uservice.selectUserByUmail(umail);
+		System.out.println("uvo >>> " + uvo);
+		
+		if(uvo == null) {
+			rattrs.addFlashAttribute("msg","등록된 이메일이 없습니다.");
+			return "redirect:/user/tempPwForm";
+		}
+		
+		//8자리 임시 비밀번호 생성
+		String tempPw = UUID.randomUUID().toString().replace("-", "").substring(0,8);
+		System.out.println("tempPw >>> " + tempPw);
+		
+		//DB업데이트
+		UserVO updateUvo = new UserVO();
+		updateUvo.setUno(uvo.getUno());
+		updateUvo.setUpw(EncryptUtils.encryptMD5(tempPw));
+		updateUvo.setUtempyn("Y");
+		
+		int res = uservice.updateUpw(updateUvo);
+		System.out.println("res >>> " + res);
+		
+		//화면에 임시 비밀번호 출력
+		rattrs.addFlashAttribute("msg", "임시 비밀번호 : " + tempPw);
+		return "redirect:/user/tempPwForm";
+	}
+	
+	//비밀번호 변경 폼
+	@RequestMapping(value = "/changePwForm")
+	public String changePwForm(HttpSession session) {
+		System.out.println("UserController changePwForm() 함수진입 >>> ");
+		if(session.getAttribute("loginUser") == null) return "redirect:/user/logForm";
+		
+		return "user/changePwForm";
+	}
+	
+	//비밀번호 변경 처리
+	@PostMapping(value = "/changePw")
+	public String changePw(@RequestParam String currentUpw,
+							@RequestParam String newUpw,
+							HttpSession session,
+							RedirectAttributes rattrs) {
+		System.out.println("UserController changePw() 함수진입 >>> ");
+		UserVO loginUser =(UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		//현재 비밀번호 암호화 후 검증
+		UserVO uvo = uservice.userOne(loginUser.getUno());
+		if(!EncryptUtils.encryptMD5(currentUpw).equals(uvo.getUpw())) {
+			System.out.println("현재 비밀번호 불일치 >>> " );
+			rattrs.addFlashAttribute("msg", "현재 비밀번호가 일치하지 않습니다");
+			return "redirect:/user/changePwForm";
+		}
+		//새 비밀번호 암호화 후 업데이트
+		UserVO updateUvo = new UserVO();
+		updateUvo.setUno(loginUser.getUno());
+		updateUvo.setUpw(EncryptUtils.encryptMD5(newUpw));
+		updateUvo.setUtempyn("N");
+		
+		int res = uservice.updateUpw(updateUvo);
+		System.out.println("res >>> " + res);
+		
+		// 세션갱신
+		session.setAttribute("loginUser", uservice.userOne(loginUser.getUno()));
+		rattrs.addFlashAttribute("msg", "비밀번호가 변경되었습니다.");
+		return "redirect:/user/mypage";
+	}
+	
+	//회원탈퇴 폼
+	@RequestMapping(value = "/withdrawForm")
+	public String withdrawForm(HttpSession session) {
+		System.out.println("UserController withdrawForm() 함수진입 >>> ");
+		if(session.getAttribute("loginUser") == null) return "redirect:/user/logForm";
+		return "user/withdrawForm";
+	}
+	
+	//회원탈퇴 처리
+	@PostMapping(value = "/withdraw")
+	public String withdraw(@RequestParam String upw,
+							HttpSession session,
+							RedirectAttributes rattrs) {
+		System.out.println("UserController withdraw() 함수진입 >>> ");
+		UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+		if(loginUser == null) return "redirect:/user/logForm";
+		
+		//비밀번호 암호화 후 검증
+		UserVO uvo = uservice.userOne(loginUser.getUno());
+		if(!EncryptUtils.encryptMD5(upw).equals(uvo.getUpw())) {
+			System.out.println("비밀번호 불일치 >>>> ");
+			rattrs.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+			return "redirect:/user/withdrawForm";
+		}
+		int res = uservice.userDelete(loginUser.getUno());
+		System.out.println("res >>> " + res);
+		
+		session.invalidate();
+		return "redirect:/";
+		
+	}
+}

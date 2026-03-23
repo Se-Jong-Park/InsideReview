@@ -1,0 +1,157 @@
+package com.jeonju.movie.user.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.jeonju.movie.comm.SearchCondition;
+import com.jeonju.movie.user.service.UserDAO;
+import com.jeonju.movie.user.vo.UserVO;
+
+@Repository
+public class UserDAOImpl implements UserDAO {
+	
+	@Autowired
+	private SqlSession session;
+	
+	private String namespace = "com.jeonju.movie.app.mapper.UserMapper.";
+
+	@Override
+	public int userJoin(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("함수진입");
+		int res = session.insert(namespace+"userJoin",uvo);
+		return res;
+	}
+
+	@Override
+	public int userMaxno() {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO 함수진입 >>>>> ");
+		int maxno = session.selectOne(namespace+"maxno");
+		System.out.println("maxno >>> " + maxno);
+		return maxno;
+	}
+
+	@Override
+	public int IdCheck(String uid) {
+		// TODO Auto-generated method stub
+		System.out.println("IdCheck 함수진입 >>>> ");
+		System.out.println("uid >>>" + uid);
+		int res = session.selectOne(namespace+"IdCheck",uid);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public UserVO selectID(String uid) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO selectID 함수진입 >>> ");
+		System.out.println("uid >>> " + uid);
+		UserVO uvo = session.selectOne(namespace+"selectID",uid);
+		System.out.println(uvo);
+		return uvo;
+	}
+
+	@Override
+	public int userUpdate(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO userUpdate 함수진입 >>>> ");
+		System.out.println("uvo >>> " + uvo);
+		int res = session.update(namespace + "userUpdate", uvo);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public int userDelete(String uno) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO userDelete 함수진입 >>> ");
+		System.out.println("uno >>> " + uno);
+		int res = session.update(namespace + "userDelete", uno);
+		System.out.println("res >>> " + res);
+		return res;
+	}
+
+	@Override
+	public List<UserVO> userList(SearchCondition sc) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO userList 함수진입 >>> ");
+		System.out.println("sc >>> " + sc);
+		List<UserVO> uList = session.selectList(namespace+"userList",sc);
+		System.out.println("uList >>> " + uList);
+		return uList;
+	}
+
+	@Override
+	public int userCnt(SearchCondition sc) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO userCnt 함수진입 >>> ");
+		System.out.println("sc >>> " + sc);
+		int totalCnt = session.selectOne(namespace+"userCnt",sc);
+		System.out.println("totalCnt" + totalCnt);
+		return totalCnt;
+	}
+
+	@Override
+	public UserVO userOne(String uno) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO userOne 함수진입 >>> ");
+		System.out.println("uno >>> " +uno);
+		UserVO uvo = session.selectOne(namespace+"userOne",uno);
+		System.out.println("uvo >>> " + uvo);
+		return uvo;
+	}
+
+	@Override
+	public String searchID(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO searchID 함수진입 >>>> ");
+		System.out.println("uvo >>> " + uvo);
+		String uid = session.selectOne(namespace+"searchID",uvo);
+		System.out.println("uid >>> " +uid);
+		return uid;
+	}
+
+	@Override
+	public String searchPW(UserVO uvo) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO searchPW 함수진입 >>> ");
+		System.out.println("uvo >>>  " + uvo);
+		String uid = session.selectOne(namespace+"searchPW",uvo);
+		System.out.println("uid >>>> " + uid);
+		return uid;
+	}
+
+	@Override
+	public int countByUmail(String umail) {
+		// TODO Auto-generated method stub
+		
+		return 0;
+	}
+
+	@Override
+	public UserVO selectUserByUmail(String umail) {
+		// TODO Auto-generated method stub
+		System.out.println("UserDAO selectUserByUmail 함수진입 >>> ");
+		System.out.println("umail >>> " + umail);
+		UserVO uvo = session.selectOne(namespace+"selectUserByUmail", umail);
+		System.out.println("uvo >>> " + uvo);
+		return uvo;
+	}
+
+	@Override
+	public int updateUpw(UserVO uvo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateUprofile(UserVO uvo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

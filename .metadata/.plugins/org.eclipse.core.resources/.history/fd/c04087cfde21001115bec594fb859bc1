@@ -1,0 +1,14 @@
+package com.jeonju.movie.comm;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class UnoGenerator {
+	private static final AtomicInteger counter = new AtomicInteger(0);
+	
+	public static String generate() {
+		String datePart = new SimpleDateFormat("yyMMdd").format(new Date());
+		int
+	}
+}

@@ -1,0 +1,53 @@
+
+3월 18, 2026 22:42:17.640 NEW SESSION
+3월 18, 2026 22:42:17.640 Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 18, 2026 22:42:20.295 [16460:28800:0318/224220.295:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 18, 2026 22:42:46.115 [16460:28800:0318/224246.115:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: QUOTA_EXCEEDED
+3월 18, 2026 23:48:16.94 [16460:28800:0318/234816.083:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 18, 2026 23:55:58.468 [16460:28800:0318/235558.467:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 18, 2026 23:55:58.941 [16460:28800:0318/235558.797:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -105
+3월 19, 2026 24:10:13.34 [16460:28800:0319/001013.034:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -105
+3월 19, 2026 01:34:47.369 [16460:28800:0319/013447.368:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 19, 2026 01:37:42.478 [16460:28800:0319/013742.478:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+
+3월 19, 2026 10:12:36.597 NEW SESSION
+3월 19, 2026 10:12:36.597 Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 19, 2026 10:12:39.361 [2464:15900:0319/101239.361:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: QUOTA_EXCEEDED
+3월 19, 2026 10:12:40.05 [2464:15900:0319/101240.005:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: QUOTA_EXCEEDED
+3월 19, 2026 10:14:28.402 [2464:28664:0319/101428.401:ERROR:components\device_event_log\device_event_log_impl.cc:202] [10:14:28.401] USB: usb_service_win.cc:104 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: �슂�냼媛� �뾾�뒿�땲�떎. (0x490)
+3월 19, 2026 10:16:50.192 [2464:28664:0319/101650.191:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:154] Attempting to show IPH IPH_LiveCaption before browser initialization complete; IPH will not be shown.
+3월 19, 2026 10:54:56.376 [2464:28664:0319/105456.376:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:154] Attempting to show IPH IPH_LiveCaption before browser initialization complete; IPH will not be shown.
+3월 19, 2026 11:05:09.753 [2464:28664:0319/110509.752:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:154] Attempting to show IPH IPH_LiveCaption before browser initialization complete; IPH will not be shown.
+3월 19, 2026 12:04:31.344 [2464:15900:0319/120431.340:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 19, 2026 12:05:35.997 [2464:15900:0319/120535.996:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 19, 2026 12:05:37.232 [2464:15900:0319/120537.230:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 19, 2026 12:29:47.792 [2464:15900:0319/122947.792:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -105
+3월 19, 2026 12:35:03.378 [2464:15900:0319/123503.377:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -105
+3월 19, 2026 14:46:11.406 [2464:19300:0319/144611.405:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:46:13.394 [2464:3012:0319/144613.394:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:46:22.806 [2464:3012:0319/144622.805:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:46:24.310 [2464:3012:0319/144624.310:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:46:26.566 [2464:3012:0319/144626.564:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:46:32.206 [2464:3012:0319/144632.206:ERROR:components\sync\engine\get_updates_processor.cc:270] PostClientToServerMessage() failed during GetUpdates with error Network error (ERR_INTERNET_DISCONNECTED)
+3월 19, 2026 14:49:55.247 [2464:15900:0319/144955.246:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -103
+3월 19, 2026 14:50:36.43 [2464:15900:0319/145036.043:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:483] ConnectionHandler failed with net error: -2
+3월 19, 2026 14:50:42.641 [2464:28664:0319/145042.640:ERROR:components\device_event_log\device_event_log_impl.cc:202] [14:50:42.641] USB: usb_service_win.cc:104 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: �슂�냼媛� �뾾�뒿�땲�떎. (0x490)
+3월 19, 2026 14:50:49.713 [2464:15900:0319/145049.713:ERROR:google_apis\gcm\engine\connection_factory_impl.cc:434] Failed to connect to MCS endpoint with error -105
+3월 19, 2026 14:55:31.621 [2464:28664:0319/145531.620:ERROR:components\device_event_log\device_event_log_impl.cc:202] [14:55:31.621] USB: usb_service_win.cc:104 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: �슂�냼媛� �뾾�뒿�땲�떎. (0x490)
+
+3월 19, 2026 17:50:25.617 NEW SESSION
+3월 19, 2026 17:50:25.617 Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 19, 2026 17:50:28.138 [17064:3252:0319/175028.138:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 19, 2026 17:50:55.76 [17064:3252:0319/175055.076:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+
+3월 19, 2026 21:40:02.550 NEW SESSION
+3월 19, 2026 21:40:02.550 Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 19, 2026 21:40:05.382 [29824:668:0319/214005.380:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 19, 2026 21:40:29.725 [29824:668:0319/214029.725:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: QUOTA_EXCEEDED
+3월 20, 2026 24:42:46.877 Created TensorFlow Lite XNNPACK delegate for CPU.
+3월 20, 2026 24:42:49.546 [27600:14588:0320/004249.546:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 20, 2026 24:43:10.207 [27600:14588:0320/004310.207:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 20, 2026 24:44:01.798 [27600:14588:0320/004401.795:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 20, 2026 24:45:30.646 [27600:14588:0320/004530.645:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 20, 2026 24:49:14.748 [27600:14588:0320/004914.747:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+3월 20, 2026 24:56:51.549 [27600:14588:0320/005651.548:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
